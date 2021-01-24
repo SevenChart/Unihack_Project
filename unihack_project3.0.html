@@ -1,0 +1,95 @@
+<DOCTYPE! html>
+<html>
+<head>
+	<h1>Student at the Computer</h1>
+</head>
+<body>
+	<p id="points">Points: 0</p><!--state the initial time and score-->
+	<p id="timer">Timer: 0s </p>
+	<br/>
+	<script language = "javascript">
+	//Initialize all variables
+	var rects = [];
+	var points = 0;
+	var start_time = 69420;
+	var point_time = 0;
+	var delta_time = 0;
+	var now = 0;
+
+	//when the start button is pressed
+	function begin() {
+		//if this is the first time its pressed
+		if(start_time == 69420){
+			//updates the timer every 1s
+			start_time = new Date().getTime();
+			var x = setInterval(function() {
+				now = new Date().getTime();
+				delta_time = Math.floor(Math.floor(now-start_time)/1000);
+				document.getElementById("timer").innerHTML = 'Timer: ' + delta_time + 's';
+			}, 1000);
+		}
+
+		//creates a block every minute
+		var q = setInterval(function() {
+			make_block();
+			point_time = new Date().getTime()
+		}, 60000);
+	}
+
+	//makes a block
+	function make_block() {
+		//obtains a random x and y
+		let a = Math.floor((Math.random() * 1075) + 1);
+		let b = Math.floor((Math.random() * 525) + 1);
+		let c = document.getElementById("myCanvas");
+		//draws the box
+		let ctx = c.getContext("2d");
+		ctx.fillRect(a, b, 75, 75);
+		rects.push([a,b,75,75]);
+		console.log(rects[rects.length - 1][0]);
+	}
+
+	//if you click the page
+	function click_block() {
+		//useless for loop but our code works
+		for (var i = 0; i < rects.length; i++) {
+			//if the mouse is in the box when pressed
+			if(rects[rects.length - 1][0] > event.clientX-108-75 &&
+				rects[rects.length - 1][0] < event.clientX -108 && rects[rects.length - 1][1] > event.clientY-147-75 &&
+				rects[rects.length - 1][1] < event.clientY-147) {
+				//paints the entire canvas white
+				let c = document.getElementById("myCanvas");
+				let ctx = c.getContext("2d");
+				ctx.fillStyle = "#FFFFFF";
+				ctx.fillRect(0, 0, 1150, 600);
+				ctx.fillStyle = "#000000";
+				rects = [];
+				//increases the points-the sooner you press the square, the more points
+				points += 60 - Math.floor(Math.floor(new Date().getTime()-point_time)/1000);
+				//displays the points
+				document.getElementById("points").innerHTML = 'Points: ' + points;
+				break;
+			//if the mouse is not in the box
+			} else {
+				//had a penalty for missing and are too lazy to remove this
+				document.getElementById("points").innerHTML = 'Points: ' + points;
+				break;
+		}
+		}
+	}
+
+	//if the end button is pressed
+	function end() {
+		//converts score to percent by dividing by time
+		alert("Your score: " + Math.floor(points/delta_time*100) + "%");
+	}
+
+	</script>
+	<input type = "button" onclick = "begin()" value = "Start">
+	<input type = "button" onclick = "end()" value = "Stop">
+	<canvas
+		id="myCanvas" width = "1150" height = "600" onclick="click_block()" style = "border:3px solid #000000;">
+	</canvas>
+
+</body>
+</html>
